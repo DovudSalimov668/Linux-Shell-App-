@@ -1,4 +1,6 @@
 import httpx
+
+_HTTP_TIMEOUT = httpx.Timeout(connect=5.0, read=10.0, write=5.0, pool=5.0)
 from textual.widget import Widget
 from textual.app import ComposeResult
 from textual.widgets import Static
@@ -37,7 +39,7 @@ class CryptoTickerWidget(Widget):
     @work(exclusive=True)
     async def _fetch(self) -> None:
         try:
-            async with httpx.AsyncClient(timeout=10) as client:
+            async with httpx.AsyncClient(timeout=_HTTP_TIMEOUT) as client:
                 resp = await client.get(
                     "https://api.coingecko.com/api/v3/simple/price",
                     params={

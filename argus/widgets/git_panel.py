@@ -5,6 +5,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from textual import work
 from textual.app import ComposeResult
 from textual.widget import Widget
 from textual.widgets import Static
@@ -40,7 +41,7 @@ class GitPanelWidget(Widget):
         try:
             r = subprocess.run(
                 ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             if r.returncode != 0:
                 result["error"] = "not a git repo"
@@ -50,7 +51,7 @@ class GitPanelWidget(Widget):
             # Status counts
             r = subprocess.run(
                 ["git", "status", "--porcelain"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             lines = r.stdout.strip().split("\n") if r.stdout.strip() else []
             result["staged"] = sum(1 for l in lines if l and l[0] in "MADRC")
@@ -60,7 +61,7 @@ class GitPanelWidget(Widget):
             # Last commit
             r = subprocess.run(
                 ["git", "log", "-1", "--format=%s|%an|%ar"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             if r.returncode == 0 and r.stdout.strip():
                 parts = r.stdout.strip().split("|", 2)
@@ -74,7 +75,7 @@ class GitPanelWidget(Widget):
             try:
                 r = subprocess.run(
                     ["git", "rev-list", "--count", "--left-right", "HEAD...@{upstream}"],
-                    capture_output=True, text=True, cwd=cwd,
+                    capture_output=True, text=True, cwd=cwd, timeout=5,
                 )
                 if r.returncode == 0 and r.stdout.strip():
                     ab = r.stdout.strip().split()
@@ -94,8 +95,10 @@ class GitPanelWidget(Widget):
 
         return result
 
-    def _refresh(self) -> None:
-        info = self._get_git_summary()
+    @work(exclusive=True)
+    async def _refresh(self) -> None:
+        import asyncio
+        info = await asyncio.to_thread(self._get_git_summary)
         lines: list[str] = []
 
         if "error" in info:

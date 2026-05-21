@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
 import subprocess
 from pathlib import Path
 
+from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.screen import Screen
@@ -101,7 +103,7 @@ class GitScreen(Screen):
         try:
             r = subprocess.run(
                 ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             if r.returncode != 0:
                 result["error"] = "Not a git repository"
@@ -111,7 +113,7 @@ class GitScreen(Screen):
             # Repo name from toplevel
             r2 = subprocess.run(
                 ["git", "rev-parse", "--show-toplevel"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             result["repo_name"] = Path(r2.stdout.strip()).name if r2.returncode == 0 else ""
 
@@ -119,7 +121,7 @@ class GitScreen(Screen):
             try:
                 r3 = subprocess.run(
                     ["git", "rev-list", "--count", "--left-right", "HEAD...@{upstream}"],
-                    capture_output=True, text=True, cwd=cwd,
+                    capture_output=True, text=True, cwd=cwd, timeout=5,
                 )
                 if r3.returncode == 0 and r3.stdout.strip():
                     parts = r3.stdout.strip().split()
@@ -135,7 +137,7 @@ class GitScreen(Screen):
             # Status
             r = subprocess.run(
                 ["git", "status", "--porcelain"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             lines = r.stdout.strip().split("\n") if r.stdout.strip() else []
             staged = [l for l in lines if l and l[0] in "MADRC"]
@@ -148,7 +150,7 @@ class GitScreen(Screen):
             # Commits
             r = subprocess.run(
                 ["git", "log", "--format=%h|%s|%an|%ar", "-20"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             commits = []
             for line in r.stdout.strip().split("\n"):
@@ -161,14 +163,14 @@ class GitScreen(Screen):
             # Diff stat
             r = subprocess.run(
                 ["git", "diff", "--stat"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=5,
             )
             result["diff_stat"] = r.stdout.strip()
 
             # Full diff (truncated for display)
             r = subprocess.run(
                 ["git", "diff"],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=10,
             )
             diff_lines = r.stdout.split("\n")
             result["diff_full"] = "\n".join(diff_lines[:300])
@@ -180,8 +182,9 @@ class GitScreen(Screen):
 
         return result
 
-    def _load(self) -> None:
-        info = self._get_git_info()
+    @work(exclusive=True)
+    async def _load(self) -> None:
+        info = await asyncio.to_thread(self._get_git_info)
 
         if "error" in info:
             self.query_one("#git-header", Static).update(
@@ -296,13 +299,15 @@ class GitScreen(Screen):
         self._load()
         self.app.notify("Git status refreshed", timeout=2)
 
-    def _run_git(self, *args: str) -> None:
-        """Run a git command and notify the result."""
+    @work(exclusive=True)
+    async def _run_git(self, *args: str) -> None:
+        """Run a git command in a thread and notify the result."""
         cwd = Path.cwd()
         try:
-            r = subprocess.run(
+            r = await asyncio.to_thread(
+                subprocess.run,
                 ["git", *args],
-                capture_output=True, text=True, cwd=cwd,
+                capture_output=True, text=True, cwd=cwd, timeout=60,
             )
             if r.returncode == 0:
                 self.app.notify(
@@ -315,6 +320,8 @@ class GitScreen(Screen):
                     severity="error",
                     timeout=5,
                 )
+        except subprocess.TimeoutExpired:
+            self.app.notify(f"git {args[0]} timed out", severity="error", timeout=5)
         except Exception as exc:
             self.app.notify(str(exc), severity="error", timeout=5)
         self._load()

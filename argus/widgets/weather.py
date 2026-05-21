@@ -53,8 +53,9 @@ class WeatherWidget(Widget):
         cfg = getattr(self.app, "argus_config", None)
         city_name: str = cfg.city if cfg is not None else "London"
 
+        _timeout = httpx.Timeout(connect=5.0, read=15.0, write=5.0, pool=5.0)
         try:
-            async with httpx.AsyncClient(timeout=10) as client:
+            async with httpx.AsyncClient(timeout=_timeout) as client:
                 # ── Geocoding ────────────────────────────────────────────────
                 geo_resp = await client.get(
                     "https://geocoding-api.open-meteo.com/v1/search",
