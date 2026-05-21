@@ -27,7 +27,6 @@ class TypingTest(Widget):
     DEFAULT_CSS = """
     TypingTest {
         height: 100%;
-        layout: vertical;
         align: center middle;
         padding: 1 2;
     }

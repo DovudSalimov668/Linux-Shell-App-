@@ -24,7 +24,6 @@ class StatusBar(Widget):
     StatusBar {
         dock: bottom;
         height: 1;
-        layout: horizontal;
     }
     StatusBar #sb-left {
         width: auto;

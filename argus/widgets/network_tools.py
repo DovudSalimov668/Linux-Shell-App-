@@ -3,6 +3,7 @@ import re
 import socket
 from textual.widget import Widget
 from textual.app import ComposeResult
+from textual.containers import Horizontal
 from textual.widgets import Static, Input, Button, Label
 from textual import work
 
@@ -23,7 +24,6 @@ class NetworkToolsWidget(Widget):
     }
     #net-input-row {
         height: 3;
-        layout: horizontal;
     }
     #net-target {
         width: 1fr;
@@ -43,7 +43,7 @@ class NetworkToolsWidget(Widget):
 
     def compose(self) -> ComposeResult:
         yield Static("", id="net-output")
-        with Static(id="net-input-row"):
+        with Horizontal(id="net-input-row"):
             yield Input(placeholder="host or host:port", id="net-target")
             yield Button("Ping", id="net-btn-ping")
             yield Button("Port", id="net-btn-port")

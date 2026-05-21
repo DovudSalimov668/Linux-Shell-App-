@@ -10,7 +10,7 @@ from rich.markdown import Markdown
 from rich.syntax import Syntax
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal
+from textual.containers import Horizontal, Vertical
 from textual.reactive import reactive
 from textual.screen import ModalScreen, Screen
 from textual.widgets import Button, DirectoryTree, Input, Label, Static
