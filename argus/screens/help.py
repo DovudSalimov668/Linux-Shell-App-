@@ -12,8 +12,11 @@ KEYBINDINGS = [
         ("Ctrl+P", "Open command palette"),
         ("Ctrl+G", "Open games launcher"),
         ("Ctrl+F", "Open file explorer"),
+        ("Ctrl+W", "Open tools (shell, calc, network, notes…)"),
+        ("Ctrl+D", "Go back to dashboard"),
         ("Ctrl+Z", "Open process manager"),
         ("Ctrl+X", "Open git dashboard"),
+        ("Ctrl+S", "Open settings"),
         ("?", "Toggle this help overlay"),
     ]),
     ("Navigation", [
@@ -23,8 +26,8 @@ KEYBINDINGS = [
         ("Tab", "Next focusable widget"),
         ("Shift+Tab", "Previous focusable widget"),
     ]),
-    ("Dashboard", [
-        ("1–9", "Focus panel by number"),
+    ("Tools Screen  (Ctrl+W)", [
+        ("Tab / Shift+Tab", "Switch between tool tabs"),
     ]),
     ("Process Manager", [
         ("k", "Kill selected process"),

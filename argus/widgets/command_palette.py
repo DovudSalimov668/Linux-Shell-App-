@@ -16,6 +16,7 @@ COMMANDS = [
     ("Go to File Explorer", "Open the file browser", "goto_files"),
     ("Go to Git Dashboard", "Open git status and log", "goto_git"),
     ("Go to Games", "Open games launcher", "goto_games"),
+    ("Go to Tools", "Shell, calculator, network, notes, pomodoro (Ctrl+W)", "goto_tools"),
     ("Go to Settings", "Open settings screen", "goto_settings"),
     # Theme
     ("Cycle Theme", "Switch to next color theme (Ctrl+T)", "cycle_theme"),
@@ -139,6 +140,7 @@ class CommandPaletteScreen(Screen):
             "goto_files": "files",
             "goto_git": "git",
             "goto_games": "games",
+            "goto_tools": "tools",
             "goto_settings": "settings",
             "goto_dashboard": "dashboard",
         }

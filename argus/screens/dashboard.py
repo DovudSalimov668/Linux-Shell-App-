@@ -9,6 +9,7 @@ from textual.widgets import Label, Static
 
 from argus.widgets.clock import ClockWidget
 from argus.widgets.cpu_graph import CpuGraphWidget
+from argus.widgets.disk_widget import DiskWidget
 from argus.widgets.git_panel import GitPanelWidget
 from argus.widgets.log_viewer import LogViewerWidget
 from argus.widgets.net_monitor import NetMonitorWidget
@@ -16,7 +17,6 @@ from argus.widgets.process_table import ProcessTableWidget
 from argus.widgets.statusbar import StatusBar
 from argus.widgets.system_monitor import SystemMonitorWidget
 from argus.widgets.todo import TodoWidget
-from argus.widgets.weather import WeatherWidget
 
 
 class LivePanel(Widget):
@@ -87,6 +87,7 @@ class DashboardScreen(Screen):
         ("ctrl+x", "app.navigate('git')", "Git"),
         ("ctrl+f", "app.navigate('files')", "Files"),
         ("ctrl+g", "app.navigate('games')", "Games"),
+        ("ctrl+w", "app.navigate('tools')", "Tools"),
     ]
 
     DEFAULT_CSS = """
@@ -110,7 +111,7 @@ class DashboardScreen(Screen):
         yield ClockPanel(id="panel-clock")
         yield LivePanel(" Git", GitPanelWidget(), id="panel-git")
         # Row 3
-        yield LivePanel(" Weather", WeatherWidget(), id="panel-weather")
+        yield LivePanel("  Disk", DiskWidget(), id="panel-disk")
         yield LivePanel(" Todo", TodoWidget(), id="panel-todo")
         yield LivePanel(" Logs", LogViewerWidget(), id="panel-logs")
         yield StatusBar()
