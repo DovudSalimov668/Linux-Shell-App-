@@ -1,4 +1,5 @@
 import asyncio
+import re
 import socket
 from textual.widget import Widget
 from textual.app import ComposeResult
@@ -66,12 +67,24 @@ class NetworkToolsWidget(Widget):
         except Exception:
             pass
 
+    @staticmethod
+    def _valid_host(host: str) -> bool:
+        """Reject empty, flag-like, or obviously invalid hostnames."""
+        if not host or host.startswith("-"):
+            return False
+        # Allow hostnames, IPv4, IPv6 (basic check — not exhaustive)
+        return bool(re.match(r'^[a-zA-Z0-9._:\[\]-]+$', host))
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         target = self.query_one("#net-target", Input).value.strip()
         if not target:
             return
         if event.button.id == "net-btn-ping":
-            self._do_ping(target)
+            host = target.split(":")[0]
+            if not self._valid_host(host):
+                self._add_line(f"[red]Invalid host: {host!r}[/]")
+                return
+            self._do_ping(host)
         elif event.button.id == "net-btn-port":
             self._do_port_check(target)
 
@@ -96,7 +109,16 @@ class NetworkToolsWidget(Widget):
     @work(exclusive=False)
     async def _do_port_check(self, target: str) -> None:
         host, _, port_str = target.partition(":")
-        port = int(port_str) if port_str.isdigit() else 80
+        if not self._valid_host(host):
+            self._add_line(f"[red]Invalid host: {host!r}[/]")
+            return
+        try:
+            port = int(port_str) if port_str else 80
+            if not (1 <= port <= 65535):
+                raise ValueError
+        except ValueError:
+            self._add_line(f"[red]Invalid port: {port_str!r} (must be 1–65535)[/]")
+            return
         self._add_line(f"[dim]Checking {host}:{port}...[/]")
         try:
             loop = asyncio.get_event_loop()
