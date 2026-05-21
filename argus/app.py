@@ -80,13 +80,18 @@ class ArgusApp(App[None]):
     TITLE = "ARGUS"
     SUB_TITLE = "Terminal Command Center"
 
-    # Shared layout CSS — colors flow in via the Textual Theme system
     CSS_PATH = [str(_SHARED_CSS)]
 
     BINDINGS = [
         Binding("ctrl+t", "cycle_theme", "Theme", show=True),
-        Binding("ctrl+q", "quit", "Quit", show=True),
+        Binding("ctrl+p", "command_palette", "Palette", show=True),
+        Binding("ctrl+g", "navigate('games')", "Games", show=True),
+        Binding("ctrl+f", "navigate('files')", "Files", show=True),
+        Binding("ctrl+z", "navigate('processes')", "Processes", show=False),
+        Binding("ctrl+x", "navigate('git')", "Git", show=False),
+        Binding("ctrl+comma", "navigate('settings')", "Settings", show=False),
         Binding("question_mark", "help_overlay", "Help", show=True),
+        Binding("ctrl+q", "quit", "Quit", show=True),
     ]
 
     def __init__(self) -> None:
@@ -96,15 +101,11 @@ class ArgusApp(App[None]):
     # ── Lifecycle ─────────────────────────────────────────────────────────────
 
     def on_mount(self) -> None:
-        """Register custom themes and apply the saved theme."""
         for custom_theme in _CUSTOM_THEMES:
             self.register_theme(custom_theme)
-
-        # Apply the saved theme (after custom themes are registered)
         self._apply_theme(self.argus_config.theme, notify=False)
-
-        from argus.screens.dashboard import DashboardScreen
-        self.push_screen(DashboardScreen())
+        from argus.screens.boot import BootScreen
+        self.push_screen(BootScreen())
 
     def compose(self) -> ComposeResult:
         return iter([])
@@ -112,28 +113,24 @@ class ArgusApp(App[None]):
     # ── Theme helpers ─────────────────────────────────────────────────────────
 
     def _textual_theme_name(self, argus_name: str) -> str:
-        """Resolve an ARGUS theme name to a Textual registered theme name."""
         return _BUILTIN_MAP.get(argus_name, argus_name)
 
     def _apply_theme(self, argus_name: str, *, notify: bool = True) -> None:
-        """Switch to a theme by ARGUS name."""
         textual_name = self._textual_theme_name(argus_name)
         if textual_name in self.available_themes:
             self.theme = textual_name
         else:
-            self.theme = "dracula"  # graceful fallback
+            self.theme = "dracula"
 
+        self.argus_config.theme = argus_name
         self._push_theme_to_statusbar(argus_name)
 
         if notify:
             self.notify(f"Theme: {argus_name}", title="Theme Changed", timeout=2)
 
     def _push_theme_to_statusbar(self, theme_name: str) -> None:
-        """Propagate theme name to the StatusBar widget."""
         try:
             from argus.widgets.statusbar import StatusBar
-
-            # StatusBar lives in the current screen
             for sb in self.screen.query(StatusBar):
                 sb.set_theme(theme_name)
         except Exception:
@@ -142,23 +139,42 @@ class ArgusApp(App[None]):
     # ── Actions ───────────────────────────────────────────────────────────────
 
     def action_cycle_theme(self) -> None:
-        """Cycle to the next theme."""
         current = self.argus_config.theme
         try:
             idx = THEMES.index(current)
         except ValueError:
             idx = 0
         new_name = THEMES[(idx + 1) % len(THEMES)]
-
-        self.argus_config.theme = new_name
         save_config(self.argus_config)
         self._apply_theme(new_name, notify=True)
 
+    def action_navigate(self, destination: str) -> None:
+        """Push a named screen onto the stack."""
+        screen_map = {
+            "processes": "argus.screens.processes.ProcessScreen",
+            "files":     "argus.screens.files.FilesScreen",
+            "git":       "argus.screens.git.GitScreen",
+            "games":     "argus.screens.games.GamesScreen",
+            "settings":  "argus.screens.settings.SettingsScreen",
+            "dashboard": "argus.screens.dashboard.DashboardScreen",
+        }
+        fqn = screen_map.get(destination)
+        if not fqn:
+            self.notify(f"Unknown screen: {destination}", severity="warning")
+            return
+        module_path, class_name = fqn.rsplit(".", 1)
+        try:
+            import importlib
+            mod = importlib.import_module(module_path)
+            screen_cls = getattr(mod, class_name)
+            self.push_screen(screen_cls())
+        except Exception as e:
+            self.notify(f"Cannot open {destination}: {e}", severity="error")
+
+    def action_command_palette(self) -> None:
+        from argus.widgets.command_palette import CommandPaletteScreen
+        self.push_screen(CommandPaletteScreen())
+
     def action_help_overlay(self) -> None:
-        """Show a brief help notification."""
-        self.notify(
-            "Ctrl+T — cycle themes  |  Ctrl+Q — quit  |  ? — this help\n"
-            "More screens coming in future phases.",
-            title="ARGUS Help",
-            timeout=5,
-        )
+        from argus.screens.help import HelpScreen
+        self.push_screen(HelpScreen())

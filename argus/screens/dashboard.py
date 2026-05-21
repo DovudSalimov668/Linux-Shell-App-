@@ -1,32 +1,37 @@
-"""DashboardScreen — main 3-column grid of placeholder panels."""
+"""DashboardScreen — main 3-column grid with live monitoring panels."""
 
 from __future__ import annotations
 
 from textual.app import ComposeResult
 from textual.screen import Screen
+from textual.widget import Widget
 from textual.widgets import Label, Static
 
 from argus.widgets.clock import ClockWidget
+from argus.widgets.cpu_graph import CpuGraphWidget
+from argus.widgets.git_panel import GitPanelWidget
+from argus.widgets.log_viewer import LogViewerWidget
+from argus.widgets.net_monitor import NetMonitorWidget
+from argus.widgets.process_table import ProcessTableWidget
 from argus.widgets.statusbar import StatusBar
+from argus.widgets.system_monitor import SystemMonitorWidget
+from argus.widgets.todo import TodoWidget
+from argus.widgets.weather import WeatherWidget
 
 
-class PlaceholderPanel(Static):
-    """A titled panel with placeholder content."""
+class LivePanel(Widget):
+    """Panel with a title label and a child widget inside a styled border."""
 
     DEFAULT_CSS = """
-    PlaceholderPanel {
-        border: round #6272a4;
-        padding: 0 1;
+    LivePanel {
+        border: round $border;
+        background: $panel;
         height: 100%;
+        padding: 0 1;
     }
-    PlaceholderPanel .panel-title {
+    LivePanel .lp-title {
+        color: $primary;
         text-style: bold;
-        width: 100%;
-        content-align: center middle;
-        padding-bottom: 1;
-    }
-    PlaceholderPanel .panel-body {
-        color: #6272a4;
         width: 100%;
         content-align: center middle;
     }
@@ -35,7 +40,7 @@ class PlaceholderPanel(Static):
     def __init__(
         self,
         title: str,
-        body: str,
+        child: Widget,
         *,
         name: str | None = None,
         id: str | None = None,
@@ -43,11 +48,11 @@ class PlaceholderPanel(Static):
     ) -> None:
         super().__init__(name=name, id=id, classes=classes)
         self._title = title
-        self._body = body
+        self._child = child
 
     def compose(self) -> ComposeResult:
-        yield Label(self._title, classes="panel-title")
-        yield Label(self._body, classes="panel-body")
+        yield Label(self._title, classes="lp-title")
+        yield self._child
 
 
 class ClockPanel(Static):
@@ -55,11 +60,13 @@ class ClockPanel(Static):
 
     DEFAULT_CSS = """
     ClockPanel {
-        border: round #6272a4;
+        border: round $border;
+        background: $panel;
         padding: 0 1;
         height: 100%;
     }
     ClockPanel .panel-title {
+        color: $primary;
         text-style: bold;
         width: 100%;
         content-align: center middle;
@@ -75,6 +82,13 @@ class ClockPanel(Static):
 class DashboardScreen(Screen):
     """Main dashboard screen with a 3-column responsive grid."""
 
+    BINDINGS = [
+        ("ctrl+z", "app.navigate('processes')", "Processes"),
+        ("ctrl+x", "app.navigate('git')", "Git"),
+        ("ctrl+f", "app.navigate('files')", "Files"),
+        ("ctrl+g", "app.navigate('games')", "Games"),
+    ]
+
     DEFAULT_CSS = """
     DashboardScreen {
         layout: grid;
@@ -82,50 +96,21 @@ class DashboardScreen(Screen):
         grid-rows: 1fr 1fr 1fr;
         grid-gutter: 1;
         padding: 1 2;
-        background: #282a36;
+        background: $background;
     }
     """
 
     def compose(self) -> ComposeResult:
-        yield PlaceholderPanel(
-            " System Monitor",
-            "CPU · RAM · Load — coming soon",
-            id="panel-system",
-        )
-        yield PlaceholderPanel(
-            " Network",
-            "↑ Upload · ↓ Download — coming soon",
-            id="panel-network",
-        )
-        yield PlaceholderPanel(
-            " Processes",
-            "Top processes by CPU — coming soon",
-            id="panel-processes",
-        )
-        yield PlaceholderPanel(
-            " Git",
-            "Branch · Status · Log — coming soon",
-            id="panel-git",
-        )
+        # Row 1
+        yield LivePanel(" System Monitor", SystemMonitorWidget(), id="panel-system")
+        yield LivePanel(" CPU Graph", CpuGraphWidget(), id="panel-cpugraph")
+        yield LivePanel(" Processes", ProcessTableWidget(), id="panel-processes")
+        # Row 2
+        yield LivePanel(" Network", NetMonitorWidget(), id="panel-network")
         yield ClockPanel(id="panel-clock")
-        yield PlaceholderPanel(
-            " Weather",
-            "Conditions · Forecast — coming soon",
-            id="panel-weather",
-        )
-        yield PlaceholderPanel(
-            " Notes",
-            "Scratch notes — coming soon",
-            id="panel-notes",
-        )
-        yield PlaceholderPanel(
-            " Todo",
-            "Task list — coming soon",
-            id="panel-todo",
-        )
-        yield PlaceholderPanel(
-            " Logs",
-            "System logs — coming soon",
-            id="panel-logs",
-        )
+        yield LivePanel(" Git", GitPanelWidget(), id="panel-git")
+        # Row 3
+        yield LivePanel(" Weather", WeatherWidget(), id="panel-weather")
+        yield LivePanel(" Todo", TodoWidget(), id="panel-todo")
+        yield LivePanel(" Logs", LogViewerWidget(), id="panel-logs")
         yield StatusBar()

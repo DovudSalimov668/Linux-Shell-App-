@@ -118,3 +118,37 @@ StatusBar #sb-right {
 Label {
     color: $foreground;
 }
+
+/* ── System Monitor Widget ───────────────────────────────── */
+SystemMonitorWidget {
+    height: 100%;
+    padding: 0 1;
+    overflow-y: auto;
+}
+
+/* ── CPU Graph Widget ────────────────────────────────────── */
+CpuGraphWidget {
+    height: 100%;
+    padding: 0 1;
+}
+
+/* ── Net Monitor Widget ──────────────────────────────────── */
+NetMonitorWidget {
+    height: 100%;
+    padding: 0 1;
+}
+
+/* ── Live Panel ──────────────────────────────────────────── */
+LivePanel {
+    border: round $border;
+    background: $panel;
+    height: 100%;
+    padding: 0 1;
+}
+
+LivePanel .lp-title {
+    color: $primary;
+    text-style: bold;
+    width: 100%;
+    content-align: center middle;
+}
