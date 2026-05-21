@@ -21,7 +21,6 @@ class NotesWidget(Widget):
     DEFAULT_CSS = """
     NotesWidget {
         height: 100%;
-        layout: vertical;
     }
     #notes-hint {
         height: 1;

@@ -13,7 +13,6 @@ class NetworkToolsWidget(Widget):
     DEFAULT_CSS = """
     NetworkToolsWidget {
         height: 100%;
-        layout: vertical;
         padding: 0 1;
     }
     #net-output {

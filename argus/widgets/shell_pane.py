@@ -53,7 +53,6 @@ class ShellPane(Widget):
     DEFAULT_CSS = """
     ShellPane {
         height: 100%;
-        layout: vertical;
         padding: 0 1;
     }
     #shell-output {

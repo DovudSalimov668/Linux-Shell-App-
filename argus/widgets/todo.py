@@ -26,7 +26,6 @@ class TodoWidget(Widget):
     TodoWidget {
         height: 100%;
         padding: 0 1;
-        layout: vertical;
     }
     #todo-input {
         height: 3;

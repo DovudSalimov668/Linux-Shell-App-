@@ -136,7 +136,6 @@ class CalculatorWidget(Widget):
     DEFAULT_CSS = """
     CalculatorWidget {
         height: 100%;
-        layout: vertical;
         padding: 0 1;
     }
     #calc-history {

@@ -30,7 +30,6 @@ class ConfirmKill(ModalScreen[bool]):
         width: 52;
         height: 9;
         align: center middle;
-        layout: vertical;
     }
     #confirm-label {
         width: 100%;
@@ -60,7 +59,7 @@ class ConfirmKill(ModalScreen[bool]):
         self._name = name
 
     def compose(self) -> ComposeResult:
-        with Static(id="confirm-box"):
+        with Vertical(id="confirm-box"):
             yield Label(
                 f"[bold red]Kill process {self._pid}?[/]",
                 id="confirm-label",
@@ -93,7 +92,6 @@ class ReniceDialog(ModalScreen[int | None]):
         padding: 2 3;
         width: 52;
         height: 9;
-        layout: vertical;
         align: center middle;
     }
     #renice-label {
@@ -123,7 +121,7 @@ class ReniceDialog(ModalScreen[int | None]):
         self._current_nice = current_nice
 
     def compose(self) -> ComposeResult:
-        with Static(id="renice-box"):
+        with Vertical(id="renice-box"):
             yield Label(
                 f"[bold]Renice: {self._name[:30]} (PID {self._pid})[/]\n"
                 f"[dim]Current nice: {self._current_nice}  |  Range: -20 (high) to 19 (low)[/]",

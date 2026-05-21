@@ -11,7 +11,6 @@ class LogViewerWidget(Widget):
     DEFAULT_CSS = """
     LogViewerWidget {
         height: 100%;
-        layout: vertical;
         padding: 0 1;
     }
     #log-content {

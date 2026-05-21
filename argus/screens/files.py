@@ -61,7 +61,6 @@ class ConfirmDelete(ModalScreen[bool]):
         width: 58;
         height: 9;
         align: center middle;
-        layout: vertical;
     }
     #delete-label {
         width: 100%;
@@ -90,7 +89,7 @@ class ConfirmDelete(ModalScreen[bool]):
         self._path = path
 
     def compose(self) -> ComposeResult:
-        with Static(id="delete-box"):
+        with Vertical(id="delete-box"):
             yield Label(
                 f"[bold red]Delete {'directory' if self._path.is_dir() else 'file'}?[/]",
                 id="delete-label",
@@ -123,7 +122,6 @@ class NewDirDialog(ModalScreen[str | None]):
         padding: 2 3;
         width: 52;
         height: 8;
-        layout: vertical;
         align: center middle;
     }
     #newdir-label {
@@ -147,7 +145,7 @@ class NewDirDialog(ModalScreen[str | None]):
     """
 
     def compose(self) -> ComposeResult:
-        with Static(id="newdir-box"):
+        with Vertical(id="newdir-box"):
             yield Label("[bold]New Directory[/]", id="newdir-label")
             yield Input(placeholder="Directory name", id="newdir-input")
             with Horizontal(id="newdir-buttons"):
@@ -184,7 +182,6 @@ class RenameDialog(ModalScreen[str | None]):
         padding: 2 3;
         width: 56;
         height: 9;
-        layout: vertical;
         align: center middle;
     }
     #rename-label {
@@ -212,7 +209,7 @@ class RenameDialog(ModalScreen[str | None]):
         self._path = path
 
     def compose(self) -> ComposeResult:
-        with Static(id="rename-box"):
+        with Vertical(id="rename-box"):
             yield Label(
                 f"[bold]Rename:[/] [dim]{self._path.name[:40]}[/]",
                 id="rename-label",
