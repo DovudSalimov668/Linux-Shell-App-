@@ -152,3 +152,184 @@ LivePanel .lp-title {
     width: 100%;
     content-align: center middle;
 }
+
+/* ── Games Screen ────────────────────────────────────────────── */
+GamesScreen #games-sidebar {
+    width: 34;
+    border-right: solid $border;
+    padding: 1;
+    background: $panel;
+}
+GamesScreen .game-btn {
+    width: 100%;
+    margin-bottom: 1;
+}
+_GameArea {
+    width: 1fr;
+    height: 1fr;
+    border: round $border;
+    background: $panel;
+    align: center middle;
+}
+
+/* ── Process Screen ───────────────────────────────────────────── */
+ProcessScreen {
+    background: $background;
+}
+#proc-header {
+    background: $panel;
+    border-bottom: solid $border;
+}
+#proc-table {
+    border: round $border;
+    margin: 0 1;
+}
+
+/* ── Files Screen ─────────────────────────────────────────────── */
+FilesScreen #files-tree {
+    background: $panel;
+    border-right: solid $border;
+}
+
+/* ── Git Screen ───────────────────────────────────────────────── */
+GitScreen {
+    background: $background;
+}
+
+/* ── Settings Screen ──────────────────────────────────────────── */
+SettingsScreen #settings-body {
+    padding: 1 3;
+    overflow-y: auto;
+}
+.settings-row {
+    height: 3;
+    margin-bottom: 1;
+    align: left middle;
+}
+.settings-label {
+    width: 30;
+    content-align: left middle;
+}
+
+/* ── Help Screen ──────────────────────────────────────────────── */
+HelpScreen #help-box {
+    background: $panel;
+    border: round $primary;
+    padding: 1 3;
+    width: 70;
+    height: 38;
+    overflow-y: auto;
+}
+
+/* ── Command Palette ──────────────────────────────────────────── */
+CommandPaletteScreen {
+    align: center middle;
+    background: $background 75%;
+}
+CommandPaletteScreen #cp-box {
+    background: $panel;
+    border: round $primary;
+    padding: 1 2;
+    width: 70;
+    height: 24;
+}
+
+/* ── Boot Screen ──────────────────────────────────────────────── */
+BootScreen #boot-logo {
+    color: $primary;
+    text-style: bold;
+}
+BootScreen #boot-log {
+    color: $secondary;
+    width: 80%;
+    height: 12;
+}
+BootScreen #boot-progress {
+    width: 60%;
+}
+
+/* ── Matrix Rain ──────────────────────────────────────────────── */
+MatrixRainWidget {
+    background: #000000;
+}
+ScreensaverScreen {
+    background: #000000;
+}
+
+/* ── Calendar ─────────────────────────────────────────────────── */
+CalendarWidget {
+    height: 100%;
+    padding: 0 1;
+}
+
+/* ── World Clock ──────────────────────────────────────────────── */
+WorldClockWidget {
+    height: 100%;
+    padding: 0 1;
+    overflow-y: auto;
+}
+
+/* ── Shell Pane ───────────────────────────────────────────────── */
+ShellPane {
+    height: 100%;
+    layout: vertical;
+}
+ShellPane #shell-output {
+    height: 1fr;
+    overflow-y: auto;
+    border: round $border;
+    padding: 0 1;
+}
+
+/* ── Pomodoro ─────────────────────────────────────────────────── */
+PomodoroWidget {
+    height: 100%;
+    align: center middle;
+    padding: 0 1;
+}
+
+/* ── Weather ──────────────────────────────────────────────────── */
+WeatherWidget {
+    height: 100%;
+    padding: 0 1;
+    overflow-y: auto;
+}
+
+/* ── Calculator ───────────────────────────────────────────────── */
+CalculatorWidget {
+    height: 100%;
+    layout: vertical;
+    padding: 0 1;
+}
+
+/* ── Notes ────────────────────────────────────────────────────── */
+NotesWidget {
+    height: 100%;
+    layout: vertical;
+}
+
+/* ── Log Viewer ───────────────────────────────────────────────── */
+LogViewerWidget {
+    height: 100%;
+    layout: vertical;
+    padding: 0 1;
+}
+
+/* ── Crypto Ticker ────────────────────────────────────────────── */
+CryptoTickerWidget {
+    height: 100%;
+    padding: 0 1;
+    overflow-y: auto;
+}
+
+/* ── Network Tools ────────────────────────────────────────────── */
+NetworkToolsWidget {
+    height: 100%;
+    layout: vertical;
+    padding: 0 1;
+}
+
+/* ── DataTable shared ─────────────────────────────────────────── */
+DataTable {
+    height: 1fr;
+}

@@ -6,7 +6,6 @@ from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Static, Input, ListView, ListItem, Label
 from textual.binding import Binding
-import re
 
 # All available commands: (label, description, action_key)
 # action_key is the string passed to app.action_<key>() or screen navigation

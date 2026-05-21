@@ -45,6 +45,7 @@ class StatusBar(Widget):
 
     _clock: reactive[str] = reactive("")
     _theme_name: reactive[str] = reactive("dracula")
+    _screen_name: reactive[str] = reactive("")
 
     def compose(self) -> ComposeResult:
         yield Static("", id="sb-left")
@@ -62,16 +63,29 @@ class StatusBar(Widget):
     def set_theme(self, theme_name: str) -> None:
         self._theme_name = theme_name
 
+    def set_screen(self, name: str) -> None:
+        self._screen_name = name
+
     def watch__clock(self, value: str) -> None:
         self._refresh_right()
 
     def watch__theme_name(self, value: str) -> None:
         self._refresh_left()
 
+    def watch__screen_name(self, value: str) -> None:
+        self._refresh_left()
+
     def _refresh_left(self) -> None:
         try:
             left = self.query_one("#sb-left", Static)
-            hints = f" ● {self._theme_name}  {_SEP_THIN}  ^T Theme  {_SEP_THIN}  ^Q Quit  {_SEP_THIN}  ? Help "
+            theme_part = f" ● {self._theme_name}"
+            screen_part = (
+                f"  {_SEP_THIN}  [{self._screen_name}]" if self._screen_name else ""
+            )
+            hints = (
+                f"{theme_part}{screen_part}"
+                f"  {_SEP_THIN}  ^T Theme  ^P Palette  ^G Games  ^F Files  ? Help  ^Q Quit "
+            )
             left.update(hints)
         except Exception:
             pass

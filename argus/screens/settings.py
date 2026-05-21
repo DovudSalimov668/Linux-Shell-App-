@@ -2,7 +2,7 @@
 
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import Static, Label, Button, Input, Switch, Select
+from textual.widgets import Label, Button, Input, Select
 from textual.binding import Binding
 from textual.containers import Vertical, Horizontal
 
@@ -71,10 +71,10 @@ class SettingsScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Label(" ⚙ Settings", id="settings-header")
 
-        with Static(id="settings-body"):
+        with Vertical(id="settings-body"):
             yield Label("Appearance", classes="settings-section-title")
 
-            with Static(classes="settings-row"):
+            with Horizontal(classes="settings-row"):
                 yield Label("Theme:", classes="settings-label")
                 yield Select(
                     [(label, value) for value, label in THEME_CHOICES],
@@ -84,23 +84,23 @@ class SettingsScreen(Screen):
 
             yield Label("System Monitor", classes="settings-section-title")
 
-            with Static(classes="settings-row"):
+            with Horizontal(classes="settings-row"):
                 yield Label("Refresh rate (sec):", classes="settings-label")
                 yield Input(value="1.0", id="setting-refresh", classes="settings-control")
 
             yield Label("Weather", classes="settings-section-title")
 
-            with Static(classes="settings-row"):
+            with Horizontal(classes="settings-row"):
                 yield Label("City:", classes="settings-label")
                 yield Input(id="setting-city", classes="settings-control")
 
             yield Label("Productivity", classes="settings-section-title")
 
-            with Static(classes="settings-row"):
+            with Horizontal(classes="settings-row"):
                 yield Label("Pomodoro work (min):", classes="settings-label")
                 yield Input(value="25", id="setting-pomo-work", classes="settings-control")
 
-            with Static(classes="settings-row"):
+            with Horizontal(classes="settings-row"):
                 yield Label("Pomodoro break (min):", classes="settings-label")
                 yield Input(value="5", id="setting-pomo-break", classes="settings-control")
 
@@ -113,13 +113,8 @@ class SettingsScreen(Screen):
         try:
             self.query_one("#setting-city", Input).value = cfg.city
             self.query_one("#setting-refresh", Input).value = str(cfg.refresh_rate)
-            # Set theme selector
             sel = self.query_one("#setting-theme", Select)
-            # Find the matching option
-            for value, label in THEME_CHOICES:
-                if value == cfg.theme:
-                    sel.value = label
-                    break
+            sel.value = cfg.theme  # value IS the theme key e.g. "dracula"
         except Exception:
             pass
 
@@ -144,12 +139,8 @@ class SettingsScreen(Screen):
 
             theme_sel = self.query_one("#setting-theme", Select)
             if theme_sel.value and theme_sel.value != Select.BLANK:
-                # Find the value (key) for the selected label
-                for value, label in THEME_CHOICES:
-                    if label == theme_sel.value:
-                        cfg.theme = value
-                        self.app._apply_theme(value)
-                        break
+                cfg.theme = str(theme_sel.value)
+                self.app._apply_theme(str(theme_sel.value))
 
             save_config(cfg)
             self.app.notify("Settings saved!", timeout=2)

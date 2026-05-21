@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 from textual.app import App, ComposeResult
@@ -80,6 +81,9 @@ class ArgusApp(App[None]):
     TITLE = "ARGUS"
     SUB_TITLE = "Terminal Command Center"
 
+    _last_activity: float = 0.0
+    _screensaver_active: bool = False
+
     CSS_PATH = [str(_SHARED_CSS)]
 
     BINDINGS = [
@@ -89,7 +93,7 @@ class ArgusApp(App[None]):
         Binding("ctrl+f", "navigate('files')", "Files", show=True),
         Binding("ctrl+z", "navigate('processes')", "Processes", show=False),
         Binding("ctrl+x", "navigate('git')", "Git", show=False),
-        Binding("ctrl+comma", "navigate('settings')", "Settings", show=False),
+        Binding("ctrl+s", "navigate('settings')", "Settings", show=False),
         Binding("question_mark", "help_overlay", "Help", show=True),
         Binding("ctrl+q", "quit", "Quit", show=True),
     ]
@@ -104,11 +108,30 @@ class ArgusApp(App[None]):
         for custom_theme in _CUSTOM_THEMES:
             self.register_theme(custom_theme)
         self._apply_theme(self.argus_config.theme, notify=False)
+        self._last_activity = time.time()
+        self.set_interval(30.0, self._check_screensaver)
         from argus.screens.boot import BootScreen
         self.push_screen(BootScreen())
 
     def compose(self) -> ComposeResult:
         return iter([])
+
+    # ── Activity tracking / screensaver ───────────────────────────────────────
+
+    def on_key(self, event) -> None:
+        self._last_activity = time.time()
+
+    def on_mouse_move(self, event) -> None:
+        self._last_activity = time.time()
+
+    def _check_screensaver(self) -> None:
+        if self._screensaver_active:
+            return
+        idle = time.time() - self._last_activity
+        if idle > 120:
+            self._screensaver_active = True
+            from argus.screens.screensaver import ScreensaverScreen
+            self.push_screen(ScreensaverScreen())
 
     # ── Theme helpers ─────────────────────────────────────────────────────────
 
