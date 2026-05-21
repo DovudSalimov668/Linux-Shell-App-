@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "argus"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "textual>=0.80.0",
+    "rich>=13.0",
+    "psutil>=5.9",
+    "GitPython>=3.1",
+    "httpx>=0.27",
+    "plotext>=5.2",
+    "tomlkit>=0.13",
+    "pyfiglet>=1.0",
+]
+
+[project.optional-dependencies]
+gpu = ["nvidia-ml-py>=12.0"]
+
+[project.scripts]
+argus = "argus.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["argus*"]

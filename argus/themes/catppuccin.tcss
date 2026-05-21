@@ -1,0 +1,82 @@
+/* ============================================================
+   ARGUS — Catppuccin Mocha Theme
+   Pastel dark palette — warm and cozy
+   ============================================================ */
+
+Screen {
+    background: #1e1e2e;
+    color: #cdd6f4;
+}
+
+DashboardScreen {
+    background: #1e1e2e;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+PlaceholderPanel {
+    border: round #45475a;
+    background: #313244;
+    color: #cdd6f4;
+    padding: 0 1;
+}
+
+PlaceholderPanel .panel-title {
+    color: #cba6f7;
+    text-style: bold;
+}
+
+PlaceholderPanel .panel-body {
+    color: #585b70;
+}
+
+ClockPanel {
+    border: round #45475a;
+    background: #313244;
+    padding: 0 1;
+}
+
+ClockPanel .panel-title {
+    color: #cba6f7;
+    text-style: bold;
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+ClockWidget #clock-time {
+    color: #f38ba8;
+    text-style: bold;
+}
+
+ClockWidget #clock-date {
+    color: #585b70;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+StatusBar {
+    background: #181825;
+    color: #cdd6f4;
+    dock: bottom;
+    height: 1;
+}
+
+StatusBar #sb-left {
+    background: #45475a;
+    color: #cdd6f4;
+    text-style: bold;
+}
+
+StatusBar #sb-center {
+    background: #cba6f7;
+    color: #1e1e2e;
+    text-style: bold;
+}
+
+StatusBar #sb-right {
+    background: #313244;
+    color: #f38ba8;
+    text-style: bold;
+}
+
+/* ── Labels & common ────────────────────────────────────── */
+Label {
+    color: #cdd6f4;
+}

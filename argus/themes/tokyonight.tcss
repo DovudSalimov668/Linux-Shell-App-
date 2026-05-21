@@ -1,0 +1,82 @@
+/* ============================================================
+   ARGUS — Tokyo Night Theme
+   Deep navy with vibrant accents
+   ============================================================ */
+
+Screen {
+    background: #1a1b26;
+    color: #c0caf5;
+}
+
+DashboardScreen {
+    background: #1a1b26;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+PlaceholderPanel {
+    border: round #414868;
+    background: #24283b;
+    color: #c0caf5;
+    padding: 0 1;
+}
+
+PlaceholderPanel .panel-title {
+    color: #7aa2f7;
+    text-style: bold;
+}
+
+PlaceholderPanel .panel-body {
+    color: #565f89;
+}
+
+ClockPanel {
+    border: round #414868;
+    background: #24283b;
+    padding: 0 1;
+}
+
+ClockPanel .panel-title {
+    color: #7aa2f7;
+    text-style: bold;
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+ClockWidget #clock-time {
+    color: #bb9af7;
+    text-style: bold;
+}
+
+ClockWidget #clock-date {
+    color: #565f89;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+StatusBar {
+    background: #16161e;
+    color: #c0caf5;
+    dock: bottom;
+    height: 1;
+}
+
+StatusBar #sb-left {
+    background: #414868;
+    color: #c0caf5;
+    text-style: bold;
+}
+
+StatusBar #sb-center {
+    background: #7aa2f7;
+    color: #1a1b26;
+    text-style: bold;
+}
+
+StatusBar #sb-right {
+    background: #24283b;
+    color: #bb9af7;
+    text-style: bold;
+}
+
+/* ── Labels & common ────────────────────────────────────── */
+Label {
+    color: #c0caf5;
+}

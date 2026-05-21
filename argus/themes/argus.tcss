@@ -1,0 +1,120 @@
+/* ============================================================
+   ARGUS — Shared layout CSS
+   Uses Textual theme variables ($primary, $background, etc.)
+   All widget-specific styles live here; colors come from themes.
+   ============================================================ */
+
+/* ── Screen ──────────────────────────────────────────────── */
+Screen {
+    background: $background;
+    color: $foreground;
+}
+
+DashboardScreen {
+    layout: grid;
+    grid-size: 3;
+    grid-rows: 1fr 1fr 1fr;
+    grid-gutter: 1;
+    padding: 1 2;
+    background: $background;
+}
+
+/* ── Placeholder Panels ──────────────────────────────────── */
+PlaceholderPanel {
+    border: round $border;
+    background: $panel;
+    color: $foreground;
+    padding: 0 1;
+    height: 100%;
+}
+
+PlaceholderPanel .panel-title {
+    color: $primary;
+    text-style: bold;
+    width: 100%;
+    content-align: center middle;
+    padding-bottom: 1;
+}
+
+PlaceholderPanel .panel-body {
+    color: $text-muted;
+    width: 100%;
+    content-align: center middle;
+}
+
+/* ── Clock Panel ─────────────────────────────────────────── */
+ClockPanel {
+    border: round $border;
+    background: $panel;
+    padding: 0 1;
+    height: 100%;
+}
+
+ClockPanel .panel-title {
+    color: $primary;
+    text-style: bold;
+    width: 100%;
+    content-align: center middle;
+    padding-bottom: 1;
+}
+
+/* ── Clock Widget ────────────────────────────────────────── */
+ClockWidget {
+    align: center middle;
+    height: 100%;
+    width: 100%;
+}
+
+ClockWidget #clock-time {
+    color: $accent;
+    text-style: bold;
+    width: 100%;
+    content-align: center middle;
+}
+
+ClockWidget #clock-date {
+    color: $secondary;
+    width: 100%;
+    content-align: center middle;
+}
+
+/* ── Status Bar ──────────────────────────────────────────── */
+StatusBar {
+    background: $surface;
+    color: $foreground;
+    dock: bottom;
+    height: 1;
+    layout: horizontal;
+}
+
+StatusBar #sb-left {
+    background: $secondary;
+    color: $background;
+    text-style: bold;
+    width: auto;
+    height: 1;
+    content-align: left middle;
+}
+
+StatusBar #sb-center {
+    background: $primary;
+    color: $background;
+    text-style: bold;
+    width: 1fr;
+    height: 1;
+    content-align: center middle;
+}
+
+StatusBar #sb-right {
+    background: $panel;
+    color: $accent;
+    text-style: bold;
+    width: auto;
+    height: 1;
+    content-align: right middle;
+}
+
+/* ── Labels ──────────────────────────────────────────────── */
+Label {
+    color: $foreground;
+}

@@ -1,0 +1,82 @@
+/* ============================================================
+   ARGUS — Gruvbox Theme
+   Retro groove — warm earthy tones
+   ============================================================ */
+
+Screen {
+    background: #282828;
+    color: #ebdbb2;
+}
+
+DashboardScreen {
+    background: #282828;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+PlaceholderPanel {
+    border: round #504945;
+    background: #3c3836;
+    color: #ebdbb2;
+    padding: 0 1;
+}
+
+PlaceholderPanel .panel-title {
+    color: #fabd2f;
+    text-style: bold;
+}
+
+PlaceholderPanel .panel-body {
+    color: #7c6f64;
+}
+
+ClockPanel {
+    border: round #504945;
+    background: #3c3836;
+    padding: 0 1;
+}
+
+ClockPanel .panel-title {
+    color: #fabd2f;
+    text-style: bold;
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+ClockWidget #clock-time {
+    color: #fe8019;
+    text-style: bold;
+}
+
+ClockWidget #clock-date {
+    color: #7c6f64;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+StatusBar {
+    background: #1d2021;
+    color: #ebdbb2;
+    dock: bottom;
+    height: 1;
+}
+
+StatusBar #sb-left {
+    background: #504945;
+    color: #ebdbb2;
+    text-style: bold;
+}
+
+StatusBar #sb-center {
+    background: #d79921;
+    color: #282828;
+    text-style: bold;
+}
+
+StatusBar #sb-right {
+    background: #3c3836;
+    color: #fe8019;
+    text-style: bold;
+}
+
+/* ── Labels & common ────────────────────────────────────── */
+Label {
+    color: #ebdbb2;
+}

@@ -1,0 +1,82 @@
+/* ============================================================
+   ARGUS — Nord Theme
+   Arctic, north-bluish palette
+   ============================================================ */
+
+Screen {
+    background: #2e3440;
+    color: #eceff4;
+}
+
+DashboardScreen {
+    background: #2e3440;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+PlaceholderPanel {
+    border: round #4c566a;
+    background: #3b4252;
+    color: #eceff4;
+    padding: 0 1;
+}
+
+PlaceholderPanel .panel-title {
+    color: #88c0d0;
+    text-style: bold;
+}
+
+PlaceholderPanel .panel-body {
+    color: #4c566a;
+}
+
+ClockPanel {
+    border: round #4c566a;
+    background: #3b4252;
+    padding: 0 1;
+}
+
+ClockPanel .panel-title {
+    color: #88c0d0;
+    text-style: bold;
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+ClockWidget #clock-time {
+    color: #81a1c1;
+    text-style: bold;
+}
+
+ClockWidget #clock-date {
+    color: #4c566a;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+StatusBar {
+    background: #242933;
+    color: #eceff4;
+    dock: bottom;
+    height: 1;
+}
+
+StatusBar #sb-left {
+    background: #4c566a;
+    color: #eceff4;
+    text-style: bold;
+}
+
+StatusBar #sb-center {
+    background: #5e81ac;
+    color: #eceff4;
+    text-style: bold;
+}
+
+StatusBar #sb-right {
+    background: #3b4252;
+    color: #88c0d0;
+    text-style: bold;
+}
+
+/* ── Labels & common ────────────────────────────────────── */
+Label {
+    color: #eceff4;
+}

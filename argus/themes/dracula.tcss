@@ -1,0 +1,82 @@
+/* ============================================================
+   ARGUS — Dracula Theme
+   Purple / pink dark palette
+   ============================================================ */
+
+Screen {
+    background: #282a36;
+    color: #f8f8f2;
+}
+
+DashboardScreen {
+    background: #282a36;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+PlaceholderPanel {
+    border: round #6272a4;
+    background: #44475a;
+    color: #f8f8f2;
+    padding: 0 1;
+}
+
+PlaceholderPanel .panel-title {
+    color: #bd93f9;
+    text-style: bold;
+}
+
+PlaceholderPanel .panel-body {
+    color: #6272a4;
+}
+
+ClockPanel {
+    border: round #6272a4;
+    background: #44475a;
+    padding: 0 1;
+}
+
+ClockPanel .panel-title {
+    color: #bd93f9;
+    text-style: bold;
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+ClockWidget #clock-time {
+    color: #ff79c6;
+    text-style: bold;
+}
+
+ClockWidget #clock-date {
+    color: #6272a4;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+StatusBar {
+    background: #383a59;
+    color: #f8f8f2;
+    dock: bottom;
+    height: 1;
+}
+
+StatusBar #sb-left {
+    background: #6272a4;
+    color: #282a36;
+    text-style: bold;
+}
+
+StatusBar #sb-center {
+    background: #bd93f9;
+    color: #282a36;
+    text-style: bold;
+}
+
+StatusBar #sb-right {
+    background: #44475a;
+    color: #ff79c6;
+    text-style: bold;
+}
+
+/* ── Labels & common ────────────────────────────────────── */
+Label {
+    color: #f8f8f2;
+}

@@ -1,0 +1,82 @@
+/* ============================================================
+   ARGUS — Matrix Theme
+   Green on black; the construct
+   ============================================================ */
+
+Screen {
+    background: #000000;
+    color: #00ff00;
+}
+
+DashboardScreen {
+    background: #000000;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+PlaceholderPanel {
+    border: round #00aa00;
+    background: #001a00;
+    color: #00ff00;
+    padding: 0 1;
+}
+
+PlaceholderPanel .panel-title {
+    color: #00ff41;
+    text-style: bold;
+}
+
+PlaceholderPanel .panel-body {
+    color: #006600;
+}
+
+ClockPanel {
+    border: round #00aa00;
+    background: #001a00;
+    padding: 0 1;
+}
+
+ClockPanel .panel-title {
+    color: #00ff41;
+    text-style: bold;
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+ClockWidget #clock-time {
+    color: #00ff41;
+    text-style: bold;
+}
+
+ClockWidget #clock-date {
+    color: #006600;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+StatusBar {
+    background: #001100;
+    color: #00ff00;
+    dock: bottom;
+    height: 1;
+}
+
+StatusBar #sb-left {
+    background: #003300;
+    color: #00ff00;
+    text-style: bold;
+}
+
+StatusBar #sb-center {
+    background: #00aa00;
+    color: #000000;
+    text-style: bold;
+}
+
+StatusBar #sb-right {
+    background: #001a00;
+    color: #00ff41;
+    text-style: bold;
+}
+
+/* ── Labels & common ────────────────────────────────────── */
+Label {
+    color: #00ff00;
+}

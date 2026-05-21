@@ -1,0 +1,82 @@
+/* ============================================================
+   ARGUS — Synthwave Theme
+   Magenta / cyan neon on deep purple
+   ============================================================ */
+
+Screen {
+    background: #1a0033;
+    color: #ffffff;
+}
+
+DashboardScreen {
+    background: #1a0033;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+PlaceholderPanel {
+    border: round #cc00cc;
+    background: #2a0050;
+    color: #ffffff;
+    padding: 0 1;
+}
+
+PlaceholderPanel .panel-title {
+    color: #ff00ff;
+    text-style: bold;
+}
+
+PlaceholderPanel .panel-body {
+    color: #cc88cc;
+}
+
+ClockPanel {
+    border: round #cc00cc;
+    background: #2a0050;
+    padding: 0 1;
+}
+
+ClockPanel .panel-title {
+    color: #ff00ff;
+    text-style: bold;
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+ClockWidget #clock-time {
+    color: #00ffff;
+    text-style: bold;
+}
+
+ClockWidget #clock-date {
+    color: #cc88cc;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+StatusBar {
+    background: #200040;
+    color: #ffffff;
+    dock: bottom;
+    height: 1;
+}
+
+StatusBar #sb-left {
+    background: #660066;
+    color: #ffffff;
+    text-style: bold;
+}
+
+StatusBar #sb-center {
+    background: #ff00ff;
+    color: #1a0033;
+    text-style: bold;
+}
+
+StatusBar #sb-right {
+    background: #2a0050;
+    color: #00ffff;
+    text-style: bold;
+}
+
+/* ── Labels & common ────────────────────────────────────── */
+Label {
+    color: #ffffff;
+}
