@@ -92,6 +92,7 @@ class ArgusApp(App[None]):
         Binding("ctrl+g", "navigate('games')", "Games", show=True),
         Binding("ctrl+f", "navigate('files')", "Files", show=True),
         Binding("ctrl+w", "navigate('tools')", "Tools", show=True),
+        Binding("ctrl+i", "navigate('sysinfo')", "SysInfo", show=True),
         Binding("ctrl+d", "navigate('dashboard')", "Dashboard", show=False),
         Binding("ctrl+z", "navigate('processes')", "Processes", show=False),
         Binding("ctrl+x", "navigate('git')", "Git", show=False),
@@ -182,6 +183,7 @@ class ArgusApp(App[None]):
             "games":     "argus.screens.games.GamesScreen",
             "settings":  "argus.screens.settings.SettingsScreen",
             "tools":     "argus.screens.tools.ToolsScreen",
+            "sysinfo":   "argus.screens.sysinfo.SysInfoScreen",
             "dashboard": "argus.screens.dashboard.DashboardScreen",
         }
         fqn = screen_map.get(destination)

@@ -13,6 +13,7 @@ KEYBINDINGS = [
         ("Ctrl+G", "Open games launcher"),
         ("Ctrl+F", "Open file explorer"),
         ("Ctrl+W", "Open tools (shell, calc, network, notes…)"),
+        ("Ctrl+I", "Open system info (CPU, RAM, disk, sensors…)"),
         ("Ctrl+D", "Go back to dashboard"),
         ("Ctrl+Z", "Open process manager"),
         ("Ctrl+X", "Open git dashboard"),

@@ -17,6 +17,7 @@ COMMANDS = [
     ("Go to Git Dashboard", "Open git status and log", "goto_git"),
     ("Go to Games", "Open games launcher", "goto_games"),
     ("Go to Tools", "Shell, calculator, network, notes, pomodoro (Ctrl+W)", "goto_tools"),
+    ("Go to System Info", "Full hardware/OS deep-dive (Ctrl+I)", "goto_sysinfo"),
     ("Go to Settings", "Open settings screen", "goto_settings"),
     # Theme
     ("Cycle Theme", "Switch to next color theme (Ctrl+T)", "cycle_theme"),
@@ -141,6 +142,7 @@ class CommandPaletteScreen(Screen):
             "goto_git": "git",
             "goto_games": "games",
             "goto_tools": "tools",
+            "goto_sysinfo": "sysinfo",
             "goto_settings": "settings",
             "goto_dashboard": "dashboard",
         }
