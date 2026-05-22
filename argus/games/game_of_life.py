@@ -63,9 +63,9 @@ class GameOfLife(Widget):
             new_grid.append(row)
         self._grid = new_grid
         self._generation += 1
-        self._render()
+        self._update_display()
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         rows = []
         for y in range(self.HEIGHT):
             row = "".join("█" if self._grid[y][x] else " " for x in range(self.WIDTH))

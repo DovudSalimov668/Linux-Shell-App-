@@ -50,7 +50,7 @@ class SnakeGame(Widget):
         self._score = 0
         self._alive = True
         self._place_food()
-        self._render()
+        self._update_display()
 
     def _place_food(self) -> None:
         snake_set = set(self._snake)
@@ -69,7 +69,7 @@ class SnakeGame(Widget):
 
         if new_head in self._snake:
             self._alive = False
-            self._render()
+            self._update_display()
             return
 
         self._snake.appendleft(new_head)
@@ -79,9 +79,9 @@ class SnakeGame(Widget):
         else:
             self._snake.pop()
 
-        self._render()
+        self._update_display()
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         snake_set = set(self._snake)
         head = self._snake[0]
         rows = []

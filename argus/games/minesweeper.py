@@ -34,7 +34,7 @@ class Minesweeper(Widget):
         self._dead = False
         self._cx = 0
         self._cy = 0
-        self._render()
+        self._update_display()
 
     def _start(self, avoid_r: int, avoid_c: int) -> None:
         # Place mines avoiding the first click cell and its immediate neighbours
@@ -73,7 +73,7 @@ class Minesweeper(Widget):
         if unrevealed == self.MINES:
             self._won = True
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         COUNT_COLORS = ["", "blue", "green", "red", "dark_blue", "dark_red", "cyan", "black", "dim"]
         lines = []
         for r in range(self.ROWS):
@@ -139,4 +139,4 @@ class Minesweeper(Widget):
             r, c = self._cy, self._cx
             if not self._revealed[r][c]:
                 self._flagged[r][c] = not self._flagged[r][c]
-        self._render()
+        self._update_display()

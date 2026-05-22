@@ -68,7 +68,7 @@ class TetrisGame(Widget):
         self._cy = 0
         if not self._valid(self._cx, self._cy, self._rot):
             self._alive = False
-            self._render()
+            self._update_display()
 
     def _cells(self, cx: int, cy: int, rot: int) -> list[tuple[int, int]]:
         shape = TETROMINOES[self._current]
@@ -104,9 +104,9 @@ class TetrisGame(Widget):
             self._cy += 1
         else:
             self._lock()
-        self._render()
+        self._update_display()
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         # Build display board
         display = [list(row) for row in self._board]
         if self._alive and self._current:
@@ -159,4 +159,4 @@ class TetrisGame(Widget):
             self._lock()
         elif event.key == "r":
             self._reset()
-        self._render()
+        self._update_display()

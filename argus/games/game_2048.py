@@ -31,7 +31,7 @@ class Game2048(Widget):
         self._over = False
         self._add_tile()
         self._add_tile()
-        self._render()
+        self._update_display()
 
     def _add_tile(self) -> None:
         empty = [(r, c) for r in range(4) for c in range(4) if self._grid[r][c] == 0]
@@ -84,7 +84,7 @@ class Game2048(Widget):
         }
         return colors.get(v, "bold bright_white")
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         lines = []
         for row in self._grid:
             parts = []
@@ -116,4 +116,4 @@ class Game2048(Widget):
         }
         if event.key in dir_map:
             self._move(dir_map[event.key])
-            self._render()
+            self._update_display()
