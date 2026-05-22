@@ -6,6 +6,7 @@ import asyncio
 import subprocess
 from pathlib import Path
 
+from rich.markup import escape as mu_escape
 from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -188,7 +189,7 @@ class GitScreen(Screen):
 
         if "error" in info:
             self.query_one("#git-header", Static).update(
-                f"[bold red] Git[/]  [dim]{info['error']}[/]"
+                f"[bold red] Git[/]  [dim]{mu_escape(info['error'])}[/]"
             )
             return
 
@@ -202,8 +203,8 @@ class GitScreen(Screen):
         behind_str = f"[yellow]↓{behind}[/]" if behind else ""
         sync_info = f"  {ahead_str} {behind_str}".strip() if (ahead or behind) else "  [dim]in sync[/]"
         header_text = (
-            f"[bold] Git[/]  [primary]{branch}[/]{sync_info}"
-            + (f"  [dim]{repo}[/]" if repo else "")
+            f"[bold] Git[/]  [primary]{mu_escape(branch)}[/]{sync_info}"
+            + (f"  [dim]{mu_escape(repo)}[/]" if repo else "")
         )
         self.query_one("#git-header", Static).update(header_text)
 
@@ -218,19 +219,19 @@ class GitScreen(Screen):
         if staged:
             status_lines.append("[bold green]Staged[/]")
             for f in staged:
-                status_lines.append(f"  [green]{f.strip()}[/]")
+                status_lines.append(f"  [green]{mu_escape(f.strip())}[/]")
             status_lines.append("")
 
         if modified:
             status_lines.append("[bold yellow]Modified[/]")
             for f in modified:
-                status_lines.append(f"  [yellow]{f.strip()}[/]")
+                status_lines.append(f"  [yellow]{mu_escape(f.strip())}[/]")
             status_lines.append("")
 
         if untracked:
             status_lines.append("[bold dim]Untracked[/]")
             for f in untracked[:10]:
-                status_lines.append(f"  [dim]{f[3:].strip()}[/]")
+                status_lines.append(f"  [dim]{mu_escape(f[3:].strip())}[/]")
             if len(untracked) > 10:
                 status_lines.append(f"  [dim]… and {len(untracked) - 10} more[/]")
             status_lines.append("")
@@ -245,7 +246,7 @@ class GitScreen(Screen):
         # Diff stat on the right
         if diff_stat:
             self.query_one("#git-diff-content", Static).update(
-                f"[bold]Diff stat[/]\n[dim]{diff_stat}[/]"
+                f"[bold]Diff stat[/]\n[dim]{mu_escape(diff_stat)}[/]"
             )
         else:
             self.query_one("#git-diff-content", Static).update(
@@ -257,13 +258,12 @@ class GitScreen(Screen):
         table.clear()
         for commit in info.get("commits", []):
             h, msg, author, when = commit
-            # Truncate long messages
             short_msg = msg[:55] + "…" if len(msg) > 55 else msg
             table.add_row(
-                f"[cyan]{h}[/]",
-                short_msg,
-                f"[dim]{author}[/]",
-                f"[dim]{when}[/]",
+                f"[cyan]{mu_escape(h)}[/]",
+                mu_escape(short_msg),
+                f"[dim]{mu_escape(author)}[/]",
+                f"[dim]{mu_escape(when)}[/]",
             )
 
         # Full diff
@@ -272,19 +272,23 @@ class GitScreen(Screen):
             # Colour diff lines simply
             coloured: list[str] = []
             for line in diff_full.split("\n"):
+                safe = mu_escape(line)
                 if line.startswith("+++") or line.startswith("---"):
-                    coloured.append(f"[bold]{line}[/]")
+                    coloured.append(f"[bold]{safe}[/]")
                 elif line.startswith("+"):
-                    coloured.append(f"[green]{line}[/]")
+                    coloured.append(f"[green]{safe}[/]")
                 elif line.startswith("-"):
-                    coloured.append(f"[red]{line}[/]")
+                    coloured.append(f"[red]{safe}[/]")
                 elif line.startswith("@@"):
-                    coloured.append(f"[cyan]{line}[/]")
+                    coloured.append(f"[cyan]{safe}[/]")
                 else:
-                    coloured.append(line)
-            self.query_one("#git-diff-full", Static).update(
-                "\n".join(coloured)
-            )
+                    coloured.append(safe)
+            rendered = "\n".join(coloured)
+            try:
+                self.query_one("#git-diff-full", Static).update(rendered)
+            except Exception:
+                # Fall back to plain text if markup parsing fails
+                self.query_one("#git-diff-full", Static).update(diff_full[:10000])
         else:
             self.query_one("#git-diff-full", Static).update(
                 "[dim]No diff to display[/]"

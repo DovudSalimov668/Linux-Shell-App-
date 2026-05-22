@@ -5,6 +5,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from rich.markup import escape as mu_escape
 from textual import work
 from textual.app import ComposeResult
 from textual.widget import Widget
@@ -102,9 +103,9 @@ class GitPanelWidget(Widget):
         lines: list[str] = []
 
         if "error" in info:
-            lines.append(f"[dim]{info['error']}[/]")
+            lines.append(f"[dim]{mu_escape(info['error'])}[/]")
         else:
-            branch = info.get("branch", "unknown")
+            branch = mu_escape(info.get("branch", "unknown"))
             ahead = info.get("ahead", 0)
             behind = info.get("behind", 0)
 
@@ -134,10 +135,10 @@ class GitPanelWidget(Widget):
                 lines.append("")
                 lines.append("[dim]Last commit:[/]")
                 short = last_msg[:40] + "…" if len(last_msg) > 40 else last_msg
-                lines.append(f"  [dim]{short}[/]")
+                lines.append(f"  [dim]{mu_escape(short)}[/]")
                 when = info.get("last_when", "")
                 if when:
-                    lines.append(f"  [dim]{when}[/]")
+                    lines.append(f"  [dim]{mu_escape(when)}[/]")
 
         try:
             self.query_one("#git-panel-content", Static).update("\n".join(lines))

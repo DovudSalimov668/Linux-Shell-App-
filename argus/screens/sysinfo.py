@@ -967,7 +967,7 @@ class SysInfoScreen(Screen):
         color: $foreground;
     }
     .si-content {
-        height: 100%;
+        height: 1fr;
         overflow-y: auto;
         padding: 0 2;
     }
@@ -1005,29 +1005,40 @@ class SysInfoScreen(Screen):
 
     @work(exclusive=False)
     async def _load_all(self) -> None:
+        async def _load_one(widget_id: str, collector) -> None:
+            lines = await asyncio.to_thread(collector)
+            try:
+                self.query_one(f"#{widget_id}", Static).update("\n".join(lines))
+            except Exception:
+                pass
+
         await asyncio.gather(
-            asyncio.to_thread(self._update_tab, "content-overview",  _collect_overview),
-            asyncio.to_thread(self._update_tab, "content-cpu",       _collect_cpu),
-            asyncio.to_thread(self._update_tab, "content-mem",       _collect_memory),
-            asyncio.to_thread(self._update_tab, "content-storage",   _collect_storage),
-            asyncio.to_thread(self._update_tab, "content-net",       _collect_network),
-            asyncio.to_thread(self._update_tab, "content-sensors",   _collect_sensors),
-            asyncio.to_thread(self._update_tab, "content-procs",     _collect_processes),
-            asyncio.to_thread(self._update_tab, "content-services",  _collect_services),
-            asyncio.to_thread(self._update_tab, "content-hw",        _collect_hardware),
+            _load_one("content-overview",  _collect_overview),
+            _load_one("content-cpu",       _collect_cpu),
+            _load_one("content-mem",       _collect_memory),
+            _load_one("content-storage",   _collect_storage),
+            _load_one("content-net",       _collect_network),
+            _load_one("content-sensors",   _collect_sensors),
+            _load_one("content-procs",     _collect_processes),
+            _load_one("content-services",  _collect_services),
+            _load_one("content-hw",        _collect_hardware),
         )
 
-    def _update_tab(self, widget_id: str, collector) -> None:
-        try:
-            self.query_one(f"#{widget_id}", Static).update("\n".join(collector()))
-        except Exception:
-            pass
+    @work(exclusive=False)
+    async def _refresh_live(self) -> None:
+        async def _load_one(widget_id: str, collector) -> None:
+            lines = await asyncio.to_thread(collector)
+            try:
+                self.query_one(f"#{widget_id}", Static).update("\n".join(lines))
+            except Exception:
+                pass
 
-    def _refresh_live(self) -> None:
-        self._update_tab("content-overview", _collect_overview)
-        self._update_tab("content-cpu",      _collect_cpu)
-        self._update_tab("content-mem",      _collect_memory)
-        self._update_tab("content-procs",    _collect_processes)
+        await asyncio.gather(
+            _load_one("content-overview", _collect_overview),
+            _load_one("content-cpu",      _collect_cpu),
+            _load_one("content-mem",      _collect_memory),
+            _load_one("content-procs",    _collect_processes),
+        )
 
     def action_refresh_all(self) -> None:
         self._load_all()

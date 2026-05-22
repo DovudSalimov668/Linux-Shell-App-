@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
+from textual import work
 from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Static, Input, ListView, ListItem, Label
 from textual.binding import Binding
 
-# All available commands: (label, description, action_key)
-# action_key is the string passed to app.action_<key>() or screen navigation
 COMMANDS = [
     # Navigation
     ("Go to Dashboard", "Switch to the main dashboard", "goto_dashboard"),
@@ -77,13 +76,6 @@ class CommandPaletteScreen(Screen):
     #cp-list {
         height: 1fr;
     }
-    .cp-item-label {
-        color: $foreground;
-        text-style: bold;
-    }
-    .cp-item-desc {
-        color: $text-muted;
-    }
     """
 
     def compose(self) -> ComposeResult:
@@ -93,57 +85,64 @@ class CommandPaletteScreen(Screen):
             yield ListView(id="cp-list")
 
     def on_mount(self) -> None:
+        # _matched tracks which action key corresponds to each visible row
+        self._matched: list[str] = []
         self._populate("")
         self.query_one(Input).focus()
 
-    def _populate(self, query: str) -> None:
+    @work(exclusive=True)
+    async def _populate(self, query: str) -> None:
+        # Label matches rank above description-only matches
+        label_hits = [(l, d, k) for l, d, k in COMMANDS if _fuzzy_match(query, l)]
+        desc_hits  = [(l, d, k) for l, d, k in COMMANDS if not _fuzzy_match(query, l) and _fuzzy_match(query, d)]
+        matched = label_hits + desc_hits
         lv = self.query_one(ListView)
-        lv.clear()
-        for label, desc, key in COMMANDS:
-            if _fuzzy_match(query, label) or _fuzzy_match(query, desc):
-                item = ListItem(
-                    Label(f"[bold]{label}[/]  [dim]{desc}[/]"),
-                    id=f"cmd-{key}",
-                )
-                lv.append(item)
+        await lv.clear()
+        # Use no IDs on items — track order in self._matched instead
+        items = [
+            ListItem(Label(f"[bold]{label}[/]  [dim]{desc}[/]"))
+            for label, desc, key in matched
+        ]
+        self._matched = [key for _, _, key in matched]
+        if items:
+            await lv.mount(*items)
+            lv.index = 0
 
     def on_input_changed(self, event: Input.Changed) -> None:
         self._populate(event.value)
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
-        item_id = event.item.id or ""
-        key = item_id.removeprefix("cmd-")
-        self._execute(key)
+        idx = event.list_view.index
+        if idx is not None and 0 <= idx < len(self._matched):
+            self._execute(self._matched[idx])
 
     def on_key(self, event) -> None:
         if event.key == "enter":
             lv = self.query_one(ListView)
-            if lv.highlighted_child:
-                item_id = lv.highlighted_child.id or ""
-                key = item_id.removeprefix("cmd-")
-                self._execute(key)
+            idx = lv.index
+            if idx is not None and 0 <= idx < len(self._matched):
+                self._execute(self._matched[idx])
 
     def _execute(self, key: str) -> None:
-        self.app.pop_screen()  # Close palette first
+        self.app.pop_screen()
 
         theme_map = {
-            "theme_dracula": "dracula",
+            "theme_dracula":    "dracula",
             "theme_catppuccin": "catppuccin",
-            "theme_nord": "nord",
-            "theme_gruvbox": "gruvbox",
+            "theme_nord":       "nord",
+            "theme_gruvbox":    "gruvbox",
             "theme_tokyonight": "tokyonight",
-            "theme_synthwave": "synthwave",
-            "theme_matrix": "matrix",
+            "theme_synthwave":  "synthwave",
+            "theme_matrix":     "matrix",
         }
-
         screen_map = {
             "goto_processes": "processes",
-            "goto_files": "files",
-            "goto_git": "git",
-            "goto_games": "games",
-            "goto_tools": "tools",
-            "goto_sysinfo": "sysinfo",
-            "goto_settings": "settings",
+            "goto_files":     "files",
+            "goto_git":       "git",
+            "goto_games":     "games",
+            "goto_tools":     "tools",
+            "goto_sysinfo":   "sysinfo",
+            "goto_settings":  "settings",
             "goto_dashboard": "dashboard",
         }
 
