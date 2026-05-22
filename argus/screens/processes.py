@@ -180,6 +180,7 @@ class ProcessScreen(Screen):
         padding: 0 2;
         layout: horizontal;
         align: left middle;
+        border-bottom: solid $border;
     }
     #proc-title {
         width: auto;
@@ -187,6 +188,12 @@ class ProcessScreen(Screen):
         color: $primary;
         text-style: bold;
         margin-right: 2;
+    }
+    #proc-back-btn {
+        width: auto;
+        min-width: 12;
+        height: 3;
+        margin-left: 1;
     }
     #proc-filter {
         width: 36;
@@ -213,9 +220,10 @@ class ProcessScreen(Screen):
 
     def compose(self) -> ComposeResult:
         with Horizontal(id="proc-header"):
-            yield Label(" ⚙ Process Manager", id="proc-title")
+            yield Label("📋 Process Manager", id="proc-title")
             yield Input(placeholder="Filter processes...", id="proc-filter")
             yield Label("", id="proc-info")
+            yield Button("← Back", id="proc-back-btn", variant="default")
         table = DataTable(id="proc-table", zebra_stripes=True, cursor_type="row")
         table.add_columns("PID", "Name", "CPU%", "MEM%", "Status", "User")
         yield table
@@ -284,6 +292,10 @@ class ProcessScreen(Screen):
             self._refresh_data()
 
     # ── Actions ───────────────────────────────────────────────────────────────
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "proc-back-btn":
+            self.app.pop_screen()
 
     def action_go_back(self) -> None:
         self.app.pop_screen()

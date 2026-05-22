@@ -17,7 +17,8 @@ from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.screen import Screen
-from textual.widgets import Label, Static, TabbedContent, TabPane
+from textual.containers import Horizontal
+from textual.widgets import Button, Label, Static, TabbedContent, TabPane
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -956,9 +957,20 @@ class SysInfoScreen(Screen):
         height: 3;
         background: $panel;
         padding: 0 2;
+        layout: horizontal;
+        align: left middle;
+        border-bottom: solid $border;
+    }
+    #si-header-title {
+        width: 1fr;
         color: $primary;
         text-style: bold;
         content-align: left middle;
+    }
+    #si-back-btn {
+        width: auto;
+        min-width: 12;
+        height: 3;
     }
     #si-tabs  { height: 1fr; }
     #si-footer {
@@ -975,7 +987,9 @@ class SysInfoScreen(Screen):
     """
 
     def compose(self) -> ComposeResult:
-        yield Label(" System Information", id="si-header")
+        with Horizontal(id="si-header"):
+            yield Label("⚡ System Information", id="si-header-title")
+            yield Button("← Back", id="si-back-btn", variant="default")
         with TabbedContent(id="si-tabs"):
             with TabPane("Overview",  id="tab-overview"):
                 yield Static("Loading…", classes="si-content", id="content-overview")
@@ -1044,6 +1058,10 @@ class SysInfoScreen(Screen):
     def action_refresh_all(self) -> None:
         self._load_all()
         self.app.notify("Refreshing all tabs…", timeout=2)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "si-back-btn":
+            self.app.pop_screen()
 
     def action_go_back(self) -> None:
         self.app.pop_screen()

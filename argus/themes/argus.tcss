@@ -11,12 +11,16 @@ Screen {
 }
 
 DashboardScreen {
+    layout: vertical;
+    background: $background;
+}
+
+#dash-grid {
     layout: grid;
     grid-size: 3;
     grid-rows: 1fr 1fr 1fr;
     grid-gutter: 1;
-    padding: 1 2;
-    background: $background;
+    height: 1fr;
 }
 
 /* ── Placeholder Panels ──────────────────────────────────── */

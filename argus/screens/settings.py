@@ -32,9 +32,20 @@ class SettingsScreen(Screen):
         height: 3;
         background: $panel;
         padding: 0 2;
+        layout: horizontal;
+        align: left middle;
+        border-bottom: solid $border;
+    }
+    #settings-header-title {
+        width: 1fr;
         color: $primary;
         text-style: bold;
         content-align: left middle;
+    }
+    #settings-back-btn {
+        width: auto;
+        min-width: 12;
+        height: 3;
     }
     #settings-body {
         height: 1fr;
@@ -69,7 +80,9 @@ class SettingsScreen(Screen):
     """
 
     def compose(self) -> ComposeResult:
-        yield Label(" ⚙ Settings", id="settings-header")
+        with Horizontal(id="settings-header"):
+            yield Label("⚙ Settings", id="settings-header-title")
+            yield Button("← Back", id="settings-back-btn", variant="default")
 
         with Vertical(id="settings-body"):
             yield Label("Appearance", classes="settings-section-title")
@@ -119,6 +132,9 @@ class SettingsScreen(Screen):
             pass
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "settings-back-btn":
+            self.app.pop_screen()
+            return
         if event.button.id == "btn-save":
             self.action_save_settings()
 

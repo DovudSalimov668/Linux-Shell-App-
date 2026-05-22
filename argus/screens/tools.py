@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.containers import Horizontal
 from textual.screen import Screen
-from textual.widgets import Label, TabbedContent, TabPane
+from textual.widgets import Button, Label, TabbedContent, TabPane
 
 from argus.widgets.calculator import CalculatorWidget
 from argus.widgets.calendar_widget import CalendarWidget
@@ -33,9 +34,20 @@ class ToolsScreen(Screen):
         height: 3;
         background: $panel;
         padding: 0 2;
+        layout: horizontal;
+        align: left middle;
+        border-bottom: solid $border;
+    }
+    #tools-header-title {
+        width: 1fr;
         color: $primary;
         text-style: bold;
         content-align: left middle;
+    }
+    #tools-back-btn {
+        width: auto;
+        min-width: 12;
+        height: 3;
     }
     #tools-tabs {
         height: 1fr;
@@ -49,7 +61,9 @@ class ToolsScreen(Screen):
     """
 
     def compose(self) -> ComposeResult:
-        yield Label(" Tools", id="tools-header")
+        with Horizontal(id="tools-header"):
+            yield Label("🔧 Tools", id="tools-header-title")
+            yield Button("← Back", id="tools-back-btn", variant="default")
         with TabbedContent(id="tools-tabs"):
             with TabPane("Shell", id="tab-shell"):
                 yield ShellPane()
@@ -71,6 +85,10 @@ class ToolsScreen(Screen):
             "Tab Next tab  Shift+Tab Prev tab  Ctrl+D Dashboard  Esc Back",
             id="tools-footer",
         )
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "tools-back-btn":
+            self.app.pop_screen()
 
     def action_go_back(self) -> None:
         self.app.pop_screen()

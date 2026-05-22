@@ -262,9 +262,20 @@ class FilesScreen(Screen):
         height: 3;
         background: $panel;
         padding: 0 2;
+        layout: horizontal;
+        align: left middle;
+        border-bottom: solid $border;
+    }
+    #files-header-title {
+        width: 1fr;
         color: $primary;
         text-style: bold;
         content-align: left middle;
+    }
+    #files-back-btn {
+        width: auto;
+        min-width: 12;
+        height: 3;
     }
     #files-search-row {
         height: 3;
@@ -319,7 +330,9 @@ class FilesScreen(Screen):
 
     def compose(self) -> ComposeResult:
         home = Path.home()
-        yield Label(f" File Explorer — {home}", id="files-header")
+        with Horizontal(id="files-header"):
+            yield Label(f"📁 File Explorer — {home}", id="files-header-title")
+            yield Button("← Back", id="files-back-btn", variant="default")
         with Horizontal(id="files-search-row"):
             yield Label("/  Search:", id="files-search-label")
             yield Input(placeholder="Type to filter...", id="files-search-input")
@@ -390,8 +403,8 @@ class FilesScreen(Screen):
 
     def _update_header(self, path: Path) -> None:
         try:
-            self.query_one("#files-header", Label).update(
-                f" File Explorer — {path}"
+            self.query_one("#files-header-title", Label).update(
+                f"📁 File Explorer — {path}"
             )
         except Exception:
             pass
@@ -485,6 +498,10 @@ class FilesScreen(Screen):
             preview.update(f"[red]Cannot preview: {exc}[/]")
 
     # ── Actions ───────────────────────────────────────────────────────────────
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "files-back-btn":
+            self.app.pop_screen()
 
     def action_go_back(self) -> None:
         self.app.pop_screen()

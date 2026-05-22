@@ -11,7 +11,8 @@ from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.screen import Screen
-from textual.widgets import DataTable, Label, Static, TabbedContent, TabPane
+from textual.containers import Horizontal
+from textual.widgets import Button, DataTable, Label, Static, TabbedContent, TabPane
 
 
 class GitScreen(Screen):
@@ -33,9 +34,20 @@ class GitScreen(Screen):
         height: 3;
         background: $panel;
         padding: 0 2;
+        layout: horizontal;
+        align: left middle;
+        border-bottom: solid $border;
+    }
+    #git-header-title {
+        width: 1fr;
         color: $primary;
         text-style: bold;
         content-align: left middle;
+    }
+    #git-back-btn {
+        width: auto;
+        min-width: 12;
+        height: 3;
     }
     #git-body {
         height: 1fr;
@@ -77,7 +89,9 @@ class GitScreen(Screen):
     # ── Lifecycle ─────────────────────────────────────────────────────────────
 
     def compose(self) -> ComposeResult:
-        yield Static("", id="git-header")
+        with Horizontal(id="git-header"):
+            yield Label("🔀 Git Dashboard", id="git-header-title")
+            yield Button("← Back", id="git-back-btn", variant="default")
         with TabbedContent(id="git-body"):
             with TabPane("Overview", id="tab-overview"):
                 yield Static("", id="git-overview-left")
@@ -188,8 +202,8 @@ class GitScreen(Screen):
         info = await asyncio.to_thread(self._get_git_info)
 
         if "error" in info:
-            self.query_one("#git-header", Static).update(
-                f"[bold red] Git[/]  [dim]{mu_escape(info['error'])}[/]"
+            self.query_one("#git-header-title", Label).update(
+                f"[bold red]🔀 Git[/]  [dim]{mu_escape(info['error'])}[/]"
             )
             return
 
@@ -203,10 +217,10 @@ class GitScreen(Screen):
         behind_str = f"[yellow]↓{behind}[/]" if behind else ""
         sync_info = f"  {ahead_str} {behind_str}".strip() if (ahead or behind) else "  [dim]in sync[/]"
         header_text = (
-            f"[bold] Git[/]  [primary]{mu_escape(branch)}[/]{sync_info}"
+            f"[bold]🔀 Git[/]  [primary]{mu_escape(branch)}[/]{sync_info}"
             + (f"  [dim]{mu_escape(repo)}[/]" if repo else "")
         )
-        self.query_one("#git-header", Static).update(header_text)
+        self.query_one("#git-header-title", Label).update(header_text)
 
         # Build overview (left side status)
         staged = info.get("staged", [])
@@ -295,6 +309,10 @@ class GitScreen(Screen):
             )
 
     # ── Actions ───────────────────────────────────────────────────────────────
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "git-back-btn":
+            self.app.pop_screen()
 
     def action_go_back(self) -> None:
         self.app.pop_screen()

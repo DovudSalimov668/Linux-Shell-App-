@@ -50,9 +50,20 @@ class GamesScreen(Screen):
         height: 3;
         background: $panel;
         padding: 0 2;
+        layout: horizontal;
+        align: left middle;
+        border-bottom: solid $border;
+    }
+    #games-header-title {
+        width: 1fr;
         color: $primary;
         text-style: bold;
         content-align: left middle;
+    }
+    #games-back-btn {
+        width: auto;
+        min-width: 12;
+        height: 3;
     }
     #games-body {
         layout: horizontal;
@@ -82,7 +93,9 @@ class GamesScreen(Screen):
     """
 
     def compose(self) -> ComposeResult:
-        yield Label(" 🎮 Games Launcher", id="games-header")
+        with Horizontal(id="games-header"):
+            yield Label("🎮 Games Launcher", id="games-header-title")
+            yield Button("← Back", id="games-back-btn", variant="default")
         with Horizontal(id="games-body"):
             with Vertical(id="games-sidebar"):
                 yield Label("[bold]Select a game:[/]")
@@ -95,6 +108,9 @@ class GamesScreen(Screen):
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "games-back-btn":
+            self.app.pop_screen()
+            return
         gid = event.button.id
         area = self.query_one("#games-main", _GameArea)
 
