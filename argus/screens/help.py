@@ -115,7 +115,7 @@ class HelpScreen(Screen):
             for section, bindings in KEYBINDINGS:
                 yield Label(f"▸ {section}", classes="help-section")
                 for key, desc in bindings:
-                    yield Label(f"  [{key}]  {desc}", classes="help-row")
+                    yield Label(f"  \\[{key}]  {desc}", classes="help-row")
             yield Label("[dim]Press Escape or ? to close[/]", id="help-footer")
 
     def action_dismiss(self) -> None:

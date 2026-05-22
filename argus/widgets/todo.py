@@ -50,7 +50,7 @@ class TodoWidget(Widget):
     def on_mount(self) -> None:
         self._todos: list[dict] = self._load()
         self._selected: int = 0
-        self._render()
+        self._update_display()
 
     # ── Persistence ───────────────────────────────────────────────────────────
 
@@ -72,7 +72,7 @@ class TodoWidget(Widget):
 
     # ── Rendering ─────────────────────────────────────────────────────────────
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         if not self._todos:
             lines = ["[dim]No tasks. Add one below![/]"]
         else:
@@ -102,7 +102,7 @@ class TodoWidget(Widget):
             self._todos.append({"text": text, "done": False})
             self._selected = len(self._todos) - 1
             self._save()
-            self._render()
+            self._update_display()
             event.input.value = ""
 
     def on_key(self, event) -> None:
@@ -110,22 +110,22 @@ class TodoWidget(Widget):
             return
         if event.key == "j" or event.key == "down":
             self._selected = min(self._selected + 1, len(self._todos) - 1)
-            self._render()
+            self._update_display()
             event.stop()
         elif event.key == "k" or event.key == "up":
             self._selected = max(self._selected - 1, 0)
-            self._render()
+            self._update_display()
             event.stop()
         elif event.key == "space":
             if 0 <= self._selected < len(self._todos):
                 self._todos[self._selected]["done"] = not self._todos[self._selected].get("done", False)
                 self._save()
-                self._render()
+                self._update_display()
                 event.stop()
         elif event.key == "d":
             if 0 <= self._selected < len(self._todos):
                 self._todos.pop(self._selected)
                 self._selected = min(self._selected, len(self._todos) - 1)
                 self._save()
-                self._render()
+                self._update_display()
                 event.stop()
