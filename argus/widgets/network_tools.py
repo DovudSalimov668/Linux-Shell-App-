@@ -1,6 +1,8 @@
 import asyncio
 import re
 import socket
+
+from rich.markup import escape as mu_escape
 from textual.widget import Widget
 from textual.app import ComposeResult
 from textual.containers import Horizontal
@@ -99,7 +101,7 @@ class NetworkToolsWidget(Widget):
             stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=15)
             for line in stdout.decode().split("\n"):
                 if line.strip():
-                    self._add_line(f"[green]{line}[/]")
+                    self._add_line(f"[green]{mu_escape(line)}[/]")
         except asyncio.TimeoutError:
             self._add_line("[red]Ping timeout[/]")
         except Exception as e:

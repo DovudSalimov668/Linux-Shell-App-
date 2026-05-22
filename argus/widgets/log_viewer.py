@@ -1,8 +1,10 @@
+from pathlib import Path
+from collections import deque
+
+from rich.markup import escape as mu_escape
 from textual.widget import Widget
 from textual.app import ComposeResult
 from textual.widgets import Static, Label
-from pathlib import Path
-from collections import deque
 
 
 class LogViewerWidget(Widget):
@@ -76,6 +78,11 @@ class LogViewerWidget(Widget):
             return
         try:
             with open(self._log_path, "rb") as f:
+                # Detect log rotation: file is smaller than our saved position
+                f.seek(0, 2)
+                current_size = f.tell()
+                if current_size < self._file_pos:
+                    self._file_pos = 0
                 f.seek(self._file_pos)
                 data = f.read().decode("utf-8", errors="replace")
                 self._file_pos = f.tell()
@@ -88,14 +95,15 @@ class LogViewerWidget(Widget):
             pass
 
     def _colorize(self, line: str) -> str:
+        safe = mu_escape(line)
         lower = line.lower()
         if any(w in lower for w in ("error", "fail", "critical", "crit")):
-            return f"[red]{line}[/]"
+            return f"[red]{safe}[/]"
         elif any(w in lower for w in ("warn", "warning")):
-            return f"[yellow]{line}[/]"
+            return f"[yellow]{safe}[/]"
         elif any(w in lower for w in ("info", "notice")):
-            return f"[green]{line}[/]"
-        return f"[dim]{line}[/]"
+            return f"[green]{safe}[/]"
+        return f"[dim]{safe}[/]"
 
     def _update_display(self) -> None:
         try:

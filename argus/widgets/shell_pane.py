@@ -6,6 +6,7 @@ import asyncio
 import re
 from collections import deque
 
+from rich.markup import escape as mu_escape
 from textual import work
 from textual.app import ComposeResult
 from textual.widget import Widget
@@ -110,7 +111,7 @@ class ShellPane(Widget):
         # Hard block: fork bomb and similar immediate-doom patterns
         if _BLOCKED_PATTERNS.search(cmd):
             self._add_line(
-                f"[bold red]BLOCKED:[/] [red]{cmd}[/]\n"
+                f"[bold red]BLOCKED:[/] [red]{mu_escape(cmd)}[/]\n"
                 "[red]This command is blocked — it would crash or damage the system.[/]"
             )
             event.input.value = ""
@@ -120,7 +121,7 @@ class ShellPane(Widget):
         if _DESTROY_PATTERNS.search(cmd):
             self._pending_cmd = cmd
             self._add_line(
-                f"[bold yellow]WARNING:[/] [yellow]{cmd}[/]\n"
+                f"[bold yellow]WARNING:[/] [yellow]{mu_escape(cmd)}[/]\n"
                 "[yellow]This command looks destructive. "
                 "Type [bold]yes[/bold] to confirm, anything else to cancel.[/]"
             )
@@ -144,7 +145,7 @@ class ShellPane(Widget):
         self._history.append(cmd)
         self._hist_idx = -1
         event.input.value = ""
-        self._add_line(f"[bold green]$[/] {cmd}")
+        self._add_line(f"[bold green]$[/] {mu_escape(cmd)}")
         self._run_command(cmd)
 
     def on_key(self, event) -> None:
@@ -190,10 +191,10 @@ class ShellPane(Widget):
 
             if stdout:
                 for line in stdout.decode("utf-8", errors="replace").splitlines():
-                    self._add_line(line)
+                    self._add_line(mu_escape(line))
             if stderr:
                 for line in stderr.decode("utf-8", errors="replace").splitlines():
-                    self._add_line(f"[red]{line}[/]")
+                    self._add_line(f"[red]{mu_escape(line)}[/]")
             rc = proc.returncode
             color = "green" if rc == 0 else "red"
             self._add_line(f"[{color}][Exit {rc}][/]")

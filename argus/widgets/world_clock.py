@@ -45,9 +45,9 @@ class WorldClockWidget(Widget):
     def _tick(self) -> None:
         if self._sw_running:
             pass  # elapsed computed on render
-        self._render()
+        self._update_display()
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         now_utc = datetime.now(timezone.utc)
         lines = ["[bold]World Clocks[/]", ""]
 
@@ -94,4 +94,4 @@ class WorldClockWidget(Widget):
             self._sw_running = False
             self._sw_start = None
             self._sw_elapsed = 0.0
-        self._render()
+        self._update_display()

@@ -22,10 +22,10 @@ class CalendarWidget(Widget):
         yield Static("", id="cal-content")
 
     def on_mount(self) -> None:
-        self._render()
-        self.set_interval(60.0, self._render)  # refresh every minute
+        self._update_display()
+        self.set_interval(60.0, self._update_display)
 
-    def _render(self) -> None:
+    def _update_display(self) -> None:
         today = date.today()
         cal = calendar.monthcalendar(today.year, today.month)
         month_name = today.strftime("%B %Y")
