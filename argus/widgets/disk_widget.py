@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import psutil
+from rich.markup import escape as mu_escape
 
 from textual.app import ComposeResult
 from textual.widget import Widget
@@ -52,7 +53,7 @@ class DiskWidget(Widget):
             if shown == 0:
                 lines.append("[dim]No mounted filesystems found[/]")
         except Exception as exc:
-            lines.append(f"[red]{exc}[/]")
+            lines.append(f"[red]{mu_escape(str(exc))}[/]")
 
         # ── I/O stats ─────────────────────────────────────────────────────────
         try:

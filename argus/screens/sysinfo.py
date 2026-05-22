@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 
 import psutil
+from rich.markup import escape as mu_escape
 
 from textual import work
 from textual.app import ComposeResult
@@ -501,7 +502,7 @@ def _collect_network() -> list[str]:
                 ]
             lines.append("")
     except Exception as exc:
-        lines.append(f"[red]{exc}[/]")
+        lines.append(f"[red]{mu_escape(str(exc))}[/]")
 
     # DNS servers
     lines += ["[bold cyan]  DNS Servers  (/etc/resolv.conf)[/bold cyan]"]
@@ -559,7 +560,7 @@ def _collect_network() -> list[str]:
         else:
             lines.append("  [dim]no listening sockets[/]")
     except Exception as exc:
-        lines.append(f"  [dim]{exc}[/]")
+        lines.append(f"  [dim]{mu_escape(str(exc))}[/]")
     lines.append("")
 
     # Connection summary
@@ -771,7 +772,7 @@ def _collect_processes() -> list[str]:
                     )
 
     except Exception as exc:
-        lines.append(f"[red]{exc}[/]")
+        lines.append(f"[red]{mu_escape(str(exc))}[/]")
 
     return lines
 

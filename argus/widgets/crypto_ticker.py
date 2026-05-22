@@ -1,4 +1,5 @@
 import httpx
+from rich.markup import escape as mu_escape
 
 _HTTP_TIMEOUT = httpx.Timeout(connect=5.0, read=10.0, write=5.0, pool=5.0)
 from textual.widget import Widget
@@ -64,4 +65,4 @@ class CryptoTickerWidget(Widget):
                     )
                 self._content = "\n".join(lines)
         except Exception as e:
-            self._content = f"[yellow]Prices unavailable[/]\n[dim]{e}[/]"
+            self._content = f"[yellow]Prices unavailable[/]\n[dim]{mu_escape(str(e))}[/]"

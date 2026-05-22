@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from rich.markup import escape as mu_escape
 from textual import work
 from textual.app import ComposeResult
 from textual.reactive import reactive
@@ -130,7 +131,7 @@ class WeatherWidget(Widget):
             self._content = "\n".join(lines)
 
         except Exception as exc:
-            self._content = f"[yellow]Weather unavailable[/]\n[dim]{exc}[/]"
+            self._content = f"[yellow]Weather unavailable[/]\n[dim]{mu_escape(str(exc))}[/]"
 
 
 # ── WMO weather-code look-up tables ──────────────────────────────────────────

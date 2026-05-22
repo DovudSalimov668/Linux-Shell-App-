@@ -7,6 +7,7 @@ import math
 import operator
 from typing import Any
 
+from rich.markup import escape as mu_escape
 from textual.app import ComposeResult
 from textual.widget import Widget
 from textual.widgets import Input, Static
@@ -172,10 +173,10 @@ class CalculatorWidget(Widget):
             else:
                 formatted = str(result)
             self._history.append(
-                f"[green]{expr}[/] [dim]=[/] [bold]{formatted}[/]"
+                f"[green]{mu_escape(expr)}[/] [dim]=[/] [bold]{mu_escape(formatted)}[/]"
             )
         except Exception as e:
-            self._history.append(f"[red]{expr}[/] [dim]→[/] [yellow]{e}[/]")
+            self._history.append(f"[red]{mu_escape(expr)}[/] [dim]→[/] [yellow]{mu_escape(str(e))}[/]")
 
         try:
             self.query_one("#calc-history", Static).update(
